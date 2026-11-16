@@ -104,7 +104,7 @@ export default function Explore() {
             </h1>
           </Reveal>
           <Reveal delay={0.1}>
-            <div className="grid grid-cols-2 gap-x-10 gap-y-6 sm:grid-cols-4 lg:gap-x-12">
+            <div className="grid grid-cols-2 gap-x-10 gap-y-6 xl:grid-cols-4 xl:gap-x-12">
               <Kpi label="Raised for ads" value={totals.funded} fmt={(n) => usd(n)} />
               <Kpi label="Spent on TikTok" value={totals.spent} fmt={(n) => usd(n)} />
               <Kpi label="Paid to creators" value={totals.earned} fmt={(n) => usd(n)} />
