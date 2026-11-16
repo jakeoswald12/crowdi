@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import type { Ad } from "../data/types";
 
@@ -98,17 +98,25 @@ export default function AdWall({ ads, onHover, onOpen, onDragChange }: Props) {
   const host = useRef<HTMLDivElement>(null);
   const cbs = useRef({ onHover, onOpen, onDragChange });
   cbs.current = { onHover, onOpen, onDragChange };
+  const [fallback, setFallback] = useState(() => {
+    try {
+      const c = document.createElement("canvas");
+      return !(c.getContext("webgl2") || c.getContext("webgl"));
+    } catch {
+      return true;
+    }
+  });
 
   useEffect(() => {
     const el = host.current;
-    if (!el || !ads.length) return;
+    if (!el || !ads.length || fallback) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     let renderer: THREE.WebGLRenderer;
     try {
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
     } catch {
-      el.dataset.fallback = "1";
+      setFallback(true);
       return;
     }
     const dpr = Math.min(window.devicePixelRatio, 2);
@@ -363,7 +371,25 @@ export default function AdWall({ ads, onHover, onOpen, onDragChange }: Props) {
       renderer.dispose();
       renderer.domElement.remove();
     };
-  }, [ads]);
+  }, [ads, fallback]);
 
+  if (fallback) return <StaticWall ads={ads} onOpen={onOpen} />;
   return <div ref={host} className="absolute inset-0 overflow-hidden" />;
+}
+
+/** Used when WebGL isn't available: a slowly drifting grid of the same ads. */
+function StaticWall({ ads, onOpen }: { ads: Ad[]; onOpen: (ad: Ad) => void }) {
+  const tiles = Array.from({ length: 40 }, (_, i) => ads[(i * 7) % ads.length]);
+  return (
+    <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute -inset-x-[10%] -top-[20%] grid grid-cols-4 motion-safe:animate-[wall-drift_60s_linear_infinite] gap-8 sm:grid-cols-6 lg:grid-cols-8" style={{ width: "120%" }}>
+        {tiles.map((ad, i) => (
+          <button key={i} onClick={() => onOpen(ad)} className="block aspect-[25/32] overflow-hidden rounded-[18px] opacity-60 grayscale-[40%] transition hover:opacity-100 hover:grayscale-0" style={{ transform: i % 2 ? "translateY(42%)" : undefined }}>
+            <img src={ad.wall} alt={ad.title} loading="lazy" className="size-full object-cover" />
+          </button>
+        ))}
+      </div>
+      <style>{"@keyframes wall-drift { from { transform: translateY(0) } to { transform: translateY(-25%) } }"}</style>
+    </div>
+  );
 }

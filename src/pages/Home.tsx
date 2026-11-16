@@ -66,11 +66,11 @@ function HomeNav() {
       <Link to="/" className="pointer-events-auto text-[24px] text-white">
         <Logo />
       </Link>
-      <div className="hidden flex-1 justify-center gap-24 font-mono text-[11px] uppercase tracking-[0.18em] text-white/55 lg:flex">
+      <div className="hidden flex-1 justify-center gap-24 whitespace-nowrap font-mono text-[11px] uppercase tracking-[0.18em] text-white/55 xl:flex">
         <span>Crowd-made ads®</span>
         <span>Crowd-funded reach</span>
       </div>
-      <nav className="pointer-events-auto ml-auto flex items-center gap-1 text-[13.5px] font-medium lg:ml-0">
+      <nav className="pointer-events-auto ml-auto flex items-center gap-1 text-[13.5px] font-medium xl:ml-0">
         <Link to="/explore" className="hidden rounded-full px-3.5 py-2 text-white/75 transition hover:text-white sm:block">Explore</Link>
         <Link to="/briefs" className="hidden rounded-full px-3.5 py-2 text-white/75 transition hover:text-white sm:block">Briefs</Link>
         <Link to="/organizations" className="hidden rounded-full px-3.5 py-2 text-white/75 transition hover:text-white md:block">Organizations</Link>
