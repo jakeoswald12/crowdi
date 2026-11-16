@@ -379,7 +379,7 @@ export default function AdWall({ ads, onHover, onOpen, onDragChange }: Props) {
 
 /** Used when WebGL isn't available: a slowly drifting grid of the same ads. */
 function StaticWall({ ads, onOpen }: { ads: Ad[]; onOpen: (ad: Ad) => void }) {
-  const tiles = Array.from({ length: 40 }, (_, i) => ads[(i * 7) % ads.length]);
+  const tiles = Array.from({ length: 40 }, (_, i) => ads[(i * 5 + Math.floor(i / 8)) % ads.length]);
   return (
     <div className="absolute inset-0 overflow-hidden">
       <div className="absolute -inset-x-[10%] -top-[20%] grid grid-cols-4 motion-safe:animate-[wall-drift_60s_linear_infinite] gap-8 sm:grid-cols-6 lg:grid-cols-8" style={{ width: "120%" }}>
